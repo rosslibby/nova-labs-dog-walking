@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id   @default(auto()) @map("_id")  @db.ObjectId
+  email         String    @unique
+  phone         String
+  password      String
+  name          String
+  address       Address
+  dogs          Dog[]
+  bookings      Booking[]
+}
+
+model Dog {
+  id            String    @id   @default(auto()) @map("_id")  @db.ObjectId
+  name          String
+  breed         String
+  avatar        Avatar    @relation(fields: [avatarID], references: [id])
+  avatarID      String    @db.ObjectId    @unique
+  user          User      @relation(fields: [userID], references: [id])
+  userID        String    @db.ObjectId    @unique
+  booking       Booking?
+}
+
+model Avatar {
+  id            String    @id   @default(auto()) @map("_id")  @db.ObjectId
+  source        String    @unique
+  dog           Dog?
+}
+
+type Address {
+  instructions  String?
+  street1       String
+  street2       String?
+  city          String
+  state         String
+  zip           String
+}
+
+// Bookings
+
+model Booking {
+  id            String    @id   @default(auto()) @map("_id")  @db.ObjectId
+  cancelled     Boolean   @default(false)
+  user          User      @relation(fields: [userID], references: [id])
+  userID        String    @db.ObjectId    @unique
+  date          DateTime  @unique
+  dog           Dog       @relation(fields: [dogID], references: [id])
+  dogID         String    @db.ObjectId    @unique
+}
