@@ -20,7 +20,7 @@ const placeholderBookings: Booking[] = [
     dog: {
       name: 'Fido',
       breed: 'Golden Retriever',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      avatar: 'https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80',
     },
     hour: 14,
   },
@@ -42,11 +42,15 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
   const { generateHours } = useHours()
   const [hours, setHours] = useState<Hour[]>(generateHours(bookings))
   const changeDate = useCallback(async (date: Date) => {
-    // await: fetch all bookings for that day
-    // const updatedBookings = await fetch('/bookings?date={date}')
-    // setBookings(updatedBookings)
-    // update hours with bookings
-    // setHours(generateHours(updatedBookings))
+    console.log('getting bookings...')
+    const bookingsByDay = await (
+      await fetch(`/api/bookings?date=${date}`)
+    ).json()
+
+    console.log('bookings received:', bookingsByDay)
+    setBookings(bookingsByDay.bookings)
+    setHours(generateHours(bookingsByDay.bookings, date))
+    console.log('hours generated')
     setDate(date)
   }, [generateHours, setBookings, setDate, setHours])
 

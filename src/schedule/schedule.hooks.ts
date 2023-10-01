@@ -6,26 +6,33 @@ export const useHours = (
   start: number = 9, // First walk of day: 9am
   end: number = 17,  // Last walk of day: 5pm
 ) => {
-  const currentHour = (new Date()).getHours()
-  const generateHours = (bookings: Booking[]) => [
-    ...Array(end - start + 1).keys()]
-      .map((key: number) => {
-        const hour = key + start
-        const booking = bookings.find(
-          (booking: Booking) => booking.hour === hour
-        )
-        const past = hour <= currentHour
-        const label = hour > 12
-          ? `${hour - 12}pm`
-          : `${hour}am`
-        
-        return {
-          hour,
-          label,
-          booking,
-          past,
-        }
-      })
+  const generateHours = (bookings: Booking[], date: Date = new Date()) => {
+    const currentDate = new Date()
+    const currentHour = date > currentDate
+      ? 0
+      : currentDate.getHours()
+    console.log('Current hour is', currentHour)
+
+    return [
+      ...Array(end - start + 1).keys()]
+        .map((key: number) => {
+          const hour = key + start
+          const booking = bookings.find(
+            (booking: Booking) => booking.hour === hour
+          )
+          const past = hour <= currentHour
+          const label = hour > 12
+            ? `${hour - 12}pm`
+            : `${hour}am`
+          
+          return {
+            hour,
+            label,
+            booking,
+            past,
+          }
+        })
+  }
 
   return {
     generateHours,
