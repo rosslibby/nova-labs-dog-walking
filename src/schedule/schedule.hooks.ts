@@ -1,6 +1,8 @@
-import { useContext } from 'react'
+import { useCallback, useContext } from 'react'
 import { scheduleCtx } from '.'
 import { Booking } from './schedule.types'
+import { Booking as BookingT } from '@prisma/client'
+import { authCtx } from '@/auth'
 
 export const useHours = (
   start: number = 9, // First walk of day: 9am
@@ -59,5 +61,38 @@ export const useDateSwitcher = () => {
   return {
     forward: nextDay,
     back: previousDay,
+  }
+}
+
+export const useReservationApi = () => {
+  const { sessionToken } = useContext(authCtx)
+
+  const create = useCallback(async (data: Partial<BookingT>) => {
+    const result = await (await fetch(`/api/bookings`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${sessionToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })).json()
+
+    return result
+  }, [sessionToken])
+
+  const update = useCallback(async (data: Partial<BookingT>) => {
+    await fetch(`/api/bookings/${data.id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${sessionToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+  }, [sessionToken])
+
+  return {
+    create,
+    update,
   }
 }

@@ -2,10 +2,10 @@
 
 import { authCtx } from '@/auth'
 import { scheduleCtx } from '@/schedule'
-import { useDateSwitcher } from '@/schedule/schedule.hooks'
-import { ButtonProps, ButtonVariant, Hour } from '@/schedule/schedule.types'
+import { useDateSwitcher, useReservationApi } from '@/schedule/schedule.hooks'
+import { Booking, ButtonProps, ButtonVariant, Hour } from '@/schedule/schedule.types'
 import Image from 'next/image'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 
 const DateSwitcher = () => {
   const { date } = useContext(scheduleCtx)
@@ -58,35 +58,55 @@ const Button = ({
   )
 }
 
-export const ScheduleRow = ({ booking, hour, label, past }: Hour) => {
-  const user = useContext(authCtx)
-  const { date } = useContext(scheduleCtx)
-  const datetime = date.toISOString().replace(
-    /T[0-9.:]{12}/,
-    `T${hour > 9 ? hour : `0${hour}`}:00:00.000`,
-  )
-  const userBooked = booking && booking.userID === user.userID
-  const buttonDisabled = past || (booking && !userBooked)
-  const buttonVariant = userBooked
+const generateButtonProps = (
+  bookingUserId: string | undefined,
+  past: boolean,
+  userId: string
+) => {
+  const userBooked = bookingUserId === userId
+  const buttonDisabled = past || (bookingUserId && !userBooked)
+  const variant = userBooked
     ? ButtonVariant.secondary
     : ButtonVariant.primary
-  const buttonLabel = booking
+  const label = bookingUserId
     ? userBooked
       ? 'Cancel'
       : 'Booked'
     : 'Book'
 
+  return {
+    disabled: Boolean(buttonDisabled),
+    variant,
+    label,
+  }
+}
+
+export const ScheduleRow = ({ booking, hour, label, past }: Hour) => {
+  const user = useContext(authCtx)
+  const { create, update } = useReservationApi()
+  const { date } = useContext(scheduleCtx)
+  const datetime = date.toISOString().replace(
+    /T[0-9.:]{12}/,
+    `T${hour > 9 ? hour : `0${hour}`}:00:00.000`,
+  )
+  const buttonProps = generateButtonProps(booking?.userID, past, user.userID)
+  const onCancelClick = () => update({
+    id: booking?.userID,
+    cancelled: true,
+  })
+  const onBookClick = () => create({
+    date: new Date(date.setHours(hour)),
+    userID: user.userID,
+    // dogID: user
+  })
+
   return (
     <li className="p-4 text-gray-900">
       <div className="flex justify-between items-center">
         <time dateTime={datetime}>{label}</time>
-        <Button
-          label={buttonLabel}
-          disabled={buttonDisabled}
-          variant={buttonVariant}
-        />
+        <Button {...buttonProps} />
       </div>
-      {userBooked && (
+      {booking?.userID === user.userID && (
         <div className="grid grid-cols-[10%_auto] w-fit mx-auto gap-x-2 items-center py-2">
           <Image
             className="h-8 w-8 rounded-full bg-gray-800"

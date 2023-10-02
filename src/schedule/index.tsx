@@ -48,8 +48,8 @@ export const ScheduleProvider = ({ children }: ScheduleProviderProps) => {
     ).json()
 
     console.log('bookings received:', bookingsByDay)
-    setBookings(bookingsByDay.bookings)
-    setHours(generateHours(bookingsByDay.bookings, date))
+    setBookings(bookingsByDay.data)
+    setHours(generateHours(bookingsByDay.data, date))
     console.log('hours generated')
     setDate(date)
   }, [generateHours, setBookings, setDate, setHours])
