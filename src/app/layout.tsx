@@ -3,6 +3,9 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ScheduleProvider } from '../schedule'
 import { AuthProvider } from '@/auth'
+import { getServerSession } from 'next-auth'
+import { authOptions } from './api/auth/[...nextAuth]'
+import SessionProvider from './auth/provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,14 +19,18 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const session = getServerSession(authOptions)
+
   return (
     <html lang="en">
       <body className={`${inter.className} overflow-hidden`}>
-        <AuthProvider>
-          <ScheduleProvider>
-            {children}
-          </ScheduleProvider>
-        </AuthProvider>
+        <SessionProvider session={session}>
+          <AuthProvider>
+            <ScheduleProvider>
+              {children}
+            </ScheduleProvider>
+          </AuthProvider>
+        </SessionProvider>
       </body>
     </html>
   )

@@ -13,7 +13,6 @@ export const useHours = (
     const currentHour = date > currentDate
       ? 0
       : currentDate.getHours()
-    console.log('Current hour is', currentHour)
 
     return [
       ...Array(end - start + 1).keys()]

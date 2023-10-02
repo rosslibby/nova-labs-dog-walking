@@ -10,10 +10,10 @@ datasource db {
 model User {
   id            String    @id   @default(auto()) @map("_id")  @db.ObjectId
   email         String    @unique
-  phone         String
+  phone         String?
   password      String
-  name          String
-  address       Address
+  name          String?
+  address       Address?
   dogs          Dog[]
   bookings      Booking[]
 }

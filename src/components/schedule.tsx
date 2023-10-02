@@ -3,7 +3,7 @@
 import { authCtx } from '@/auth'
 import { scheduleCtx } from '@/schedule'
 import { useDateSwitcher, useReservationApi } from '@/schedule/schedule.hooks'
-import { Booking, ButtonProps, ButtonVariant, Hour } from '@/schedule/schedule.types'
+import { ButtonProps, ButtonVariant, Hour } from '@/schedule/schedule.types'
 import Image from 'next/image'
 import { useContext, useState } from 'react'
 
