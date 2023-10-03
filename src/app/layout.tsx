@@ -4,8 +4,9 @@ import { Inter } from 'next/font/google'
 import { ScheduleProvider } from '../schedule'
 import { AuthProvider } from '@/auth'
 import { getServerSession } from 'next-auth'
-import { authOptions } from './api/auth/[...nextAuth]'
+import { authOptions } from './api/auth/[...nextauth]/route'
 import SessionProvider from './auth/provider'
+import AuthWrapper from '@/components/auth-wrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,11 +26,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} overflow-hidden`}>
         <SessionProvider session={session}>
-          <AuthProvider>
-            <ScheduleProvider>
-              {children}
-            </ScheduleProvider>
-          </AuthProvider>
+          <AuthWrapper>
+            <AuthProvider>
+              <ScheduleProvider>
+                {children}
+              </ScheduleProvider>
+            </AuthProvider>
+          </AuthWrapper>
         </SessionProvider>
       </body>
     </html>

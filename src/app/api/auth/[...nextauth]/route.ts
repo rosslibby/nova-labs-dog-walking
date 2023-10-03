@@ -26,6 +26,7 @@ export const authOptions = {
       name: 'credentials',
       credentials: {},
       async authorize(credentials: any) {
+        console.log(credentials)
         try {
           const user = await prisma.user.findUnique({
             where: { email: credentials.email },
@@ -54,6 +55,7 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }: any) {
+      console.log(user, account, profile, email, credentials)
       try {
         if (typeof user.id !== typeof undefined) {
           return user
@@ -107,4 +109,4 @@ export const authOptions = {
 
 const auth = (req: any, res: any) => NextAuth(req, res, authOptions)
 
-export default auth
+export { auth as GET, auth as POST }

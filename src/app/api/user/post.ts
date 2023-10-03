@@ -1,10 +1,10 @@
 import { prisma } from '@/utils/db'
 import { NextApiRequest } from 'next'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
 
-export default async function POST(request: NextApiRequest) {
-  const { email, password } = request.body
+export async function POST(request: NextRequest) {
+  const { email, password } = await request.json()
 
   try {
     const hash = await bcrypt.hash(password, 0)

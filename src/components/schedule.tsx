@@ -6,6 +6,7 @@ import { useDateSwitcher, useReservationApi } from '@/schedule/schedule.hooks'
 import { ButtonProps, ButtonVariant, Hour } from '@/schedule/schedule.types'
 import Image from 'next/image'
 import { useContext, useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 const DateSwitcher = () => {
   const { date } = useContext(scheduleCtx)
@@ -24,6 +25,9 @@ const DateSwitcher = () => {
 
 export const ScheduleList = () => {
   const { date, hours } = useContext(scheduleCtx)
+  const session = useSession()
+
+  console.log('Session details:', session)
 
   return (
     <div className="overflow-scroll bg-white shadow w-full h-screen">
