@@ -1,5 +1,6 @@
 import { authCtx } from '@/auth'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useContext } from 'react'
 
 export default function Header() {
@@ -11,22 +12,24 @@ export default function Header() {
         <h1 className="flex gap-x-3 text-xl leading-7">
           <span className="font-semibold text-gray-900">Book a walk</span>
         </h1>
-        {user?.avatar && (
-          <Image
-            className="h-8 w-8 rounded-full bg-gray-800"
-            src={user?.avatar}
-            alt="Profile"
-            height="60"
-            width="60"
-          />
-        )}
-        {!user?.avatar && (
-          <span className="inline-block h-8 w-8 overflow-hidden rounded-full bg-gray-100">
-            <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-          </span>
-        )}
+        <Link href="/profile">
+          {user?.avatar && (
+            <Image
+              className="h-8 w-8 rounded-full bg-gray-800"
+              src={user?.avatar}
+              alt="Profile"
+              height="60"
+              width="60"
+            />
+          )}
+          {!user?.avatar && (
+            <span className="inline-block h-8 w-8 overflow-hidden rounded-full bg-gray-100">
+              <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </span>
+          )}
+        </Link>
       </div>
     </header>
   )

@@ -8,10 +8,10 @@ import { User } from '@prisma/client'
 
 const placeholderUserID = 'alpha'
 
-export const authCtx = createContext<User | null>(null)
+export const authCtx = createContext<AuthUser | null>(null)
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   getSession().then(data => {
     if (data) {
       const user = data.user as User

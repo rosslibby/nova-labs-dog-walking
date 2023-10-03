@@ -2,7 +2,6 @@
 
 import Header from '@/components/header'
 import { ScheduleList } from '@/components/schedule'
-import Image from 'next/image'
 
 export default function Home() {
   return (

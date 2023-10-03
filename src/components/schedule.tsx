@@ -39,7 +39,7 @@ export const ScheduleList = () => {
   )
 }
 
-const Button = ({
+export const Button = ({
   disabled,
   label,
   variant = ButtonVariant.primary,
