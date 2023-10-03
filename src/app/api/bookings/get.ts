@@ -7,7 +7,7 @@ import { authOptions } from '../auth/[...nextauth]/route'
 
 export async function GET(request: NextRequest, response: NextResponse) {
   const session = await getServerSession(authOptions)
-  console.log('[SERVER SESSION]:', session)
+  console.log('[SERVER DEETS]:', session)
   const queryDate = request.nextUrl.searchParams.get('date')
   const date = queryDate ? new Date(queryDate) : new Date()
   const currentDay = (new Date(date.setHours(0))).toISOString()
