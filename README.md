@@ -161,6 +161,9 @@ The endpoints are defined below:
 
 # 4. Write a React or React Native component for a row in the calendar that handles the various states it can be in (available, booked with someone else’s dog, booked with your dog)
 
+## *Actual implementation available [here\*](src/components/schedule.tsx#L86)*
+> *I left the `ScheduleRow` component in a file with other relevant components that work together to construct the schedule's list view. This should provide context for why I constructed the component the way I did.
+
 I will make a few assumptions for this component:
 
 There is a separate, imported component that shows up once a user has tapped the “Book” button. This component is a form that allows the user to select one of the dogs in their profile to schedule for the walk.
@@ -223,6 +226,8 @@ export const CalendarRow = ({ booking, date }: CalendarRowProps) => {
 ```
 
 # 5. Write the server side function that runs when a user presses “book” (pseudocode is fine)
+
+## *Actual implementation available [here](src/app/api/bookings/post.ts)*
 
 ### Outline:
 
