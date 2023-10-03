@@ -1,21 +1,27 @@
 'use client'
 
-import { createContext, useContext, useState } from 'react'
-import { Auth, AuthProviderProps } from './auth.types'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { AuthUser, AuthProviderProps } from './auth.types'
+import { getSession } from 'next-auth/react'
+import { Session } from 'next-auth'
+import { User } from '@prisma/client'
 
 const placeholderUserID = 'alpha'
 
-export const authCtx = createContext<Auth>({
-  sessionToken: '',
-  refreshToken: '',
-  userID: placeholderUserID,
-})
+export const authCtx = createContext<User | null>(null)
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [properties, setProperties] = useState<Auth>(useContext(authCtx))
+  const [user, setUser] = useState<User | null>(null)
+  getSession().then(data => {
+    if (data) {
+      const user = data.user as User
+
+      setUser(user)
+    }
+  })
 
   return (
-    <authCtx.Provider value={properties}>
+    <authCtx.Provider value={user}>
       {children}
     </authCtx.Provider>
   )

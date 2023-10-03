@@ -83,7 +83,7 @@ export const authOptions = {
     },
     async session({ session, token, user }: any) {
       if (userAccount) {
-
+        session.user = userAccount
       } else if (
         typeof token.user !== typeof undefined
           && (typeof session.user === typeof undefined

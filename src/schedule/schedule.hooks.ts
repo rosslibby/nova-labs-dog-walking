@@ -64,31 +64,27 @@ export const useDateSwitcher = () => {
 }
 
 export const useReservationApi = () => {
-  const { sessionToken } = useContext(authCtx)
-
   const create = useCallback(async (data: Partial<BookingT>) => {
     const result = await (await fetch(`/api/bookings`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${sessionToken}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     })).json()
 
     return result
-  }, [sessionToken])
+  }, [])
 
   const update = useCallback(async (data: Partial<BookingT>) => {
     await fetch(`/api/bookings/${data.id}`, {
       method: 'PUT',
       headers: {
-        'Authorization': `Bearer ${sessionToken}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     })
-  }, [sessionToken])
+  }, [])
 
   return {
     create,

@@ -1,28 +1,25 @@
 import { prisma } from '@/utils/db'
 import { NextApiRequest } from 'next'
 import { NextResponse } from 'next/server'
+import { authOptions } from '../auth/[...nextauth]/route'
+import { getServerSession } from 'next-auth'
 
 export async function POST(request: NextApiRequest) {
+  const { id } = await getServerSession(authOptions)
   const {
     body: {
       name,
       breed,
       profile_image,
     },
-    headers: {
-      Authorization,
-    },
   } = request
-  const token = Authorization?.toString().split('Bearer ').pop()
   const dog = await prisma.dog.create({
     data: {
       name,
       breed,
       avatar: profile_image,
       user: {
-        connect: {
-          id: token,
-        },
+        connect: { id },
       },
     },
   })

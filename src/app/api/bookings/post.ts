@@ -1,8 +1,12 @@
 import { prisma } from '@/utils/db'
 import { NextApiRequest } from 'next'
+import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
+import { authOptions } from '../auth/[...nextauth]/route'
 
 export async function POST(request: NextApiRequest) {
+  const { id } = await getServerSession(authOptions)
+
   try {
     const {
       body: {
@@ -13,7 +17,6 @@ export async function POST(request: NextApiRequest) {
         Authorization,
       },
     } = request
-    const token = Authorization?.toString().split('Bearer ').pop()
 
     // Check for conflicting booking
     const conflict = !!await prisma.booking.findFirst({
@@ -34,7 +37,7 @@ export async function POST(request: NextApiRequest) {
       data: {
         user: {
           connect: {
-            id: token,
+            id,
           },
         },
         date,

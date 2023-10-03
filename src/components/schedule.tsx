@@ -27,8 +27,6 @@ export const ScheduleList = () => {
   const { date, hours } = useContext(scheduleCtx)
   const session = useSession()
 
-  console.log('Session details:', session)
-
   return (
     <div className="overflow-scroll bg-white shadow w-full h-screen">
       <ul role="list" className="divide-y divide-gray-200">
@@ -87,20 +85,24 @@ const generateButtonProps = (
 
 export const ScheduleRow = ({ booking, hour, label, past }: Hour) => {
   const user = useContext(authCtx)
+
   const { create, update } = useReservationApi()
   const { date } = useContext(scheduleCtx)
+
+  if (!user?.id) return null
+
   const datetime = date.toISOString().replace(
     /T[0-9.:]{12}/,
     `T${hour > 9 ? hour : `0${hour}`}:00:00.000`,
   )
-  const buttonProps = generateButtonProps(booking?.userID, past, user.userID)
+  const buttonProps = generateButtonProps(booking?.userID, past, user.id)
   const onCancelClick = () => update({
     id: booking?.userID,
     cancelled: true,
   })
   const onBookClick = () => create({
     date: new Date(date.setHours(hour)),
-    userID: user.userID,
+    userID: user.id,
     // dogID: user
   })
 
@@ -110,7 +112,7 @@ export const ScheduleRow = ({ booking, hour, label, past }: Hour) => {
         <time dateTime={datetime}>{label}</time>
         <Button {...buttonProps} />
       </div>
-      {booking?.userID === user.userID && (
+      {booking?.userID === user.id && (
         <div className="grid grid-cols-[10%_auto] w-fit mx-auto gap-x-2 items-center py-2">
           <Image
             className="h-8 w-8 rounded-full bg-gray-800"

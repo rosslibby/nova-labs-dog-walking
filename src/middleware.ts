@@ -6,11 +6,17 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => Boolean(token)
+      authorized({ req, token }) {
+        if (req.nextUrl.pathname.startsWith('/api/')) {
+          return token !== null
+        }
+
+        return !!token
+      }
     },
-  }
+  },
 )
 
 export const config = {
-  matcher: ['/((?!auth).*)(.+)'],
+  matcher: ['/api/:function/:function'],
 }
